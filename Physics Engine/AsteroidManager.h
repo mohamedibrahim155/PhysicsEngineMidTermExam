@@ -12,6 +12,7 @@ public:
 	std::vector<std::shared_ptr<Asteroid> > asteroidModels;
 	
 	void SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship);
+	void ChangeAstroidsDirections();
 	void SetCollisionCallBackForAsteroids();
 	int randomNumberGen(int min, int max);
 	PhysicsEngine* physEngine;

@@ -20,6 +20,13 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 		int PosY = randomNumberGen(-30, 30);
 		int PosZ = randomNumberGen(-30, 30);
 
+		while (PosX<20 && PosY < 20 && PosZ< 20)
+		{
+			PosX = randomNumberGen(-30, 30);
+			PosY = randomNumberGen(-30, 30);
+			PosZ = randomNumberGen(-30, 30);
+
+		}
 		int randomOffsetX = randomNumberGen(-1, 1);
 		int randomOffsetY = randomNumberGen(-1, 1);
 		int randomOffsetZ = randomNumberGen(-1, 1);
@@ -28,7 +35,7 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 		glm::vec3 direction = glm::normalize(Ship->transform.position - asteroidCopy->model->transform.position);
 		direction +=  glm::vec3(randomOffsetX, randomOffsetY, randomOffsetZ);
 		asteroidCopy->DistanceFromShip = Ship->transform.position;
-		asteroidCopy->phys->velocity = direction *20.0f;
+		asteroidCopy->phys->velocity = direction *15.0f;
 		asteroidCopy->setPhysicsEngine(physEngine);
 		asteroidCopy->redball = new RedBall(redBallObj);
 		asteroidCopy->redball->greyBallDecal = new GreyBall(greyBallObj);
@@ -38,6 +45,31 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 
 	}
 
+}
+
+void AsteroidManager::ChangeAstroidsDirections()
+{
+	for (size_t i = 0; i < asteroidModels.size(); i++)
+	{
+		//glm::vec3 startPoint = Ship->transform.position;
+		glm::vec3 startPoint = asteroidModels[i].get()->DistanceFromShip;
+
+		glm::vec3 currentDir = asteroidModels[i].get()->model->transform.position;
+		glm::vec3 nomralizeDir = glm::normalize(currentDir);
+
+		int randomOffsetX = randomNumberGen(-1, 1);
+		int randomOffsetY = randomNumberGen(-1, 1);
+		int randomOffsetZ = randomNumberGen(-1, 1);
+		currentDir += glm::vec3(randomOffsetX, randomOffsetY, randomOffsetZ);
+		glm::vec3 current = currentDir;
+		float dist = glm::distance(current, startPoint);
+		if (dist < 18)
+		{
+			asteroidModels[i].get()->phys->velocity = nomralizeDir * 15.0f;
+
+		}
+
+	}
 }
 
 void AsteroidManager::SetCollisionCallBackForAsteroids()

@@ -47,6 +47,7 @@ bool firstMouse = true;
 bool switchCamera = false;
 bool switchToPointLight = false;
 bool isSpacePressed = false;
+bool isSheildActivated = false;
 glm::vec3 currentLight(1.0f, 0.0f, 1.0f);
 glm::vec3 spotlightPos(1.0f, 0.0f, 1.0f);
 glm::vec3 PointLightPos(-1.0f, 0.0f, 1.0f);
@@ -430,8 +431,8 @@ int main()
 
 	PhysicsObject* shipPhysics = new PhysicsObject(Ship);
 	Ship->transform.position = glm::vec3(0, -3, 0.0f);
-	shipPhysics->physicsType = AABB;
-	shipPhysics->Initialize(true,true,STATIC);
+	shipPhysics->physicsType = TRIANGLE;
+	shipPhysics->Initialize(true,false,STATIC);
 
 	manager.greyBallObj = new ModelLoad(DecalModel);
 	manager.redBallObj = new ModelLoad(explosionSphereModel);
@@ -517,14 +518,29 @@ int main()
 		manager.ScaleFactorRedBall(deltaTime);
 		if (isSpacePressed)
 		{
+			manager.ChangeAstroidsDirections();
+			//glm::vec3 startPoint = Ship->transform.position;
+			//for (size_t i = 0; i < manager.asteroidModels.size(); i++)
+			//{
+			//	//glm::vec3 startPoint = Ship->transform.position;
+			//	glm::vec3 startPoint = manager.asteroidModels[i].get()->DistanceFromShip;
 
-			for (size_t i = 0; i < manager.asteroidModels.size(); i++)
-			{
-				glm::vec3 currentDir = manager.asteroidModels[i].get()->model->transform.position;
-				glm::vec3 nomralizeDir = glm::normalize(currentDir);
-				manager.asteroidModels[i].get()->phys->velocity = nomralizeDir*20.0f;
-			}
-			isSpacePressed = false;
+			//	glm::vec3 currentDir = manager.asteroidModels[i].get()->model->transform.position;
+			//	glm::vec3 nomralizeDir = glm::normalize(currentDir);
+
+			//	int randomOffsetX = manager.randomNumberGen(-1, 1);
+			//	int randomOffsetY = manager.randomNumberGen(-1, 1);
+			//	int randomOffsetZ = manager.randomNumberGen(-1, 1);
+			//	currentDir += glm::vec3(randomOffsetX, randomOffsetY, randomOffsetZ);
+			//	glm::vec3 current = currentDir;
+			//	float dist = glm::distance(current, startPoint);
+			//	if (dist<18)
+			//	{
+			//		manager.asteroidModels[i].get()->phys->velocity = nomralizeDir * 15.0f;
+
+			//	}
+			//	
+			//}
 		}
 		//std::cout << "sphere position : " <<speherePhysics->UpdateSphere() << " " << sphere3->transform.position.y << " " << sphere3->transform.position.z<<std::endl;
 
