@@ -1,0 +1,29 @@
+#pragma once
+#include <vector>
+#include "PhysicsObject.h"
+
+
+
+
+class PhysicsEngine
+{
+public:
+	PhysicsEngine();
+	~PhysicsEngine();
+
+	float timer = 0;
+	float fixedTimeStep = 0.2f;
+	
+
+	void AddPhysicsObjects(PhysicsObject* objs);
+	void Update(float deltaTime);
+	void UpdatePhysics(float deltatime);
+	std::vector<PhysicsObject*> physicsObjects;
+	std::vector<glm::vec3> collisionPoints;
+
+
+
+private:
+
+};
+
