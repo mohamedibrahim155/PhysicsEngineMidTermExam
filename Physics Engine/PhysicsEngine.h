@@ -12,14 +12,16 @@ public:
 	~PhysicsEngine();
 
 	float timer = 0;
-	float fixedTimeStep = 0.2f;
+	float fixedTimeStep = 0.01f;
 	
 
 	void AddPhysicsObjects(PhysicsObject* objs);
+	void RemovePhysicsObject(PhysicsObject* objs);
 	void Update(float deltaTime);
 	void UpdatePhysics(float deltatime);
 	std::vector<PhysicsObject*> physicsObjects;
 	std::vector<glm::vec3> collisionPoints;
+
 
 
 

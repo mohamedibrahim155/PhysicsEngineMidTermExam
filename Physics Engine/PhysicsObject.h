@@ -52,7 +52,7 @@ public:
 	const std::function<void(PhysicsObject*)>& GetCollisionCall();
 	void DoCollisionCall(const std::function<void(PhysicsObject*)>& collisionCallback);
 
-	
+	float bounciness = 0.8f;
 
 };
 

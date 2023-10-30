@@ -134,9 +134,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\glad.c" />
-    <ClCompile Include="Astroid.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="AsteroidManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ExternalFileLoader.cpp" />
+    <ClCompile Include="GreyBall.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -147,6 +149,7 @@
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PlayerInput.cpp" />
+    <ClCompile Include="RedBall.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -155,11 +158,14 @@
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Astroid.h" />
+    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="AsteroidManager.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="GreyBall.h" />
     <ClInclude Include="PhysicsCollisionTypes.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="PlayyerInput.h" />
+    <ClInclude Include="RedBall.h" />
     <ClInclude Include="Rockets.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Light.h" />

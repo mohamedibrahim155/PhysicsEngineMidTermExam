@@ -350,7 +350,8 @@ ModelLoad::ModelLoad()
 
 ModelLoad::ModelLoad(ModelLoad* copyModel)
 {
-    this->ListofMeshesInthisModel = std::vector<MeshData*>(copyModel->ListofMeshesInthisModel.begin(), copyModel->ListofMeshesInthisModel.end());
+    this->ListofMeshesInthisModel = copyModel->ListofMeshesInthisModel;
+    //this->ListofMeshesInthisModel = std::vector<MeshData*>(copyModel->ListofMeshesInthisModel.begin(), copyModel->ListofMeshesInthisModel.end());
     this->diffuseTexture = copyModel->diffuseTexture;
     this->specularTexture = copyModel->specularTexture;
     this->modelName = copyModel->modelName;

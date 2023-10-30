@@ -25,7 +25,9 @@
 #include "WeaponFactory.h"
 #include "PlayyerInput.h"
 #include "PhysicsEngine.h"
-
+#include "Asteroid.h"
+#include "AsteroidManager.h"
+#include"RedBall.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #pragma region Variables Declaration
@@ -275,17 +277,11 @@ void Shoot(GLFWwindow* window, glm::vec3& pos, ModelLoad* instanceMesh, ShaderCl
 
 std::vector<MeshData> meshTemp;
 
+
 int main()
 {
 
-	WeaponFactory* factory = nullptr;
 
-	factory->CreateWeapon(1)->Shoot();
-	factory->CreateWeapon(2)->Shoot();
-
-
-	std::cout << "Laser Gun:"   << factory->CreateWeapon(1)->AmmoCount() << std::endl;
-	std::cout << "Rocket Gun: " << factory->CreateWeapon(2)->AmmoCount() << std::endl;
 
 	
 
@@ -337,14 +333,25 @@ int main()
 	ModelLoad* lightModel= new ModelLoad();
 	lightModel->diffuseTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Diffuse.png", DIFFUSE);
 	lightModel->specularTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Specular.png", SPECULAR);
-	lightModel->LoadModel("Sphere_1_unit_Radius.ply");
+	lightModel->LoadModel("Models/SpecSphere/Sphere 1.fbx");
 	lightModel->transform.scale = glm::vec3(1);
 	lightModel->modelName = "Player";
 	lightModel->transform.scale = glm::vec3(0.3f);
-	modelsLoaded.push_back(lightModel);
+	//modelsLoaded.push_back(lightModel);
+
 
 
 	
+
+	ModelLoad* explosionSphereModel = new ModelLoad();
+	explosionSphereModel->diffuseTexture.LoadTexture("Models/SpecSphere/redColor.png", DIFFUSE);
+	explosionSphereModel->specularTexture.LoadTexture("Models/SpecSphere/redColor.png", SPECULAR);
+	explosionSphereModel->LoadModel("Models/DefaultSphere/Sphere_1_unit_Radius.ply");
+
+	ModelLoad* DecalModel = new ModelLoad();
+	DecalModel->diffuseTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Diffuse.png", DIFFUSE);
+	DecalModel->specularTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Specular.png", SPECULAR);
+	DecalModel->LoadModel("Models/DefaultSphere/Sphere_1_unit_Radius.ply");
 
 	
 
@@ -352,9 +359,10 @@ int main()
 	Ship->diffuseTexture.LoadTexture("Models/StarTrek/Diffuse.png", DIFFUSE);
 	Ship->specularTexture.LoadTexture("Models/StarTrek/Specualar.png", SPECULAR);
 	Ship->LoadModel("Models/StarTrek/ship.ply");
+	Ship->modelName = "SHIP";
 	//plane->transform.position.y = -1;
 	Ship->transform.scale =glm::vec3(0.001f);
-	modelsLoaded.push_back(Ship);
+	//modelsLoaded.push_back(Ship);
 
 
 
@@ -363,22 +371,13 @@ int main()
 		AsteroidOne->diffuseTexture.LoadTexture("Models/StarTrek/Asteroids/Diffuse.jpg", DIFFUSE);
 		AsteroidOne->specularTexture.LoadTexture("Models/StarTrek/Asteroids/Specular.jpg", SPECULAR);
 		AsteroidOne->LoadModel("Models/StarTrek/Asteroids/AsteroidOne.ply");
+		AsteroidOne->modelName = "ASTEROID";
 		AsteroidOne->transform.position = glm::vec3(2,8,2);
 		AsteroidOne->transform.scale = glm::vec3(0.0015f);
-		modelsLoaded.push_back(AsteroidOne);
+		//modelsLoaded.push_back(AsteroidOne);
 
 
 		
-
-	
-
-	
-	
-	
-
-
-
-
 
 	LightManager lightManager;
 	Light directionLight;
@@ -393,45 +392,55 @@ int main()
 
 	PhysicsEngine engine;
 
+	AsteroidManager manager;
+	//for (size_t i = 0; i < 5; i++)
+	//{
+	//	//ModelLoad* Asteroidcopy = new ModelLoad(AsteroidOne);
+	//	//Asteroidcopy->transform.position = glm::vec3(i * 1, 10, i * 3);
+	//	//Asteroidcopy->transform.scale = glm::vec3(0.0015f);
+	//	//modelsLoaded.push_back(Asteroidcopy);
 
-	for (size_t i = 0; i < 4; i++)
-	{
-		ModelLoad* Asteroidcopy = new ModelLoad(AsteroidOne);
-		Asteroidcopy->transform.position = glm::vec3(i * 1, 10, i * 3);
-		Asteroidcopy->transform.scale = glm::vec3(0.0015f);
-		modelsLoaded.push_back(Asteroidcopy);
+	//	//PhysicsObject* asteroidPhysics = new PhysicsObject(Asteroidcopy);
+	//	//asteroidPhysics->physicsType = SPHERE;
+	//	//asteroidPhysics->Initialize(false,true);
 
-		PhysicsObject* asteroidPhysics = new PhysicsObject(Asteroidcopy);
-		asteroidPhysics->physicsType = SPHERE;
-		asteroidPhysics->Initialize(false);
-		engine.AddPhysicsObjects(asteroidPhysics);
-	}
+	//	//asteroidPhysics->DoCollisionCall([asteroidPhysics](PhysicsObject* other) {
+	//	//	std::cout << "Other name: " << other->model->modelName << std::endl;
+	//	//	});
+
+	//	//engine.AddPhysicsObjects(asteroidPhysics);
+
+
+
+	//	Asteroid* nw = new Asteroid(AsteroidOne);
+	//	nw->model->transform.position = glm::vec3(i * 1, 10, 0);
+	//	glm::vec3 direction = glm::normalize(Ship->transform.position - nw->model->transform.position);
+	//	nw->phys->velocity = direction;
+	//	manager.asteroidLists.push_back(nw);
+	//	engine.AddPhysicsObjects(nw->getPhysicsObject());
+
+	//}
 	
 
-	
-	
 
 	PhysicsObject* shipPhysics = new PhysicsObject(Ship);
 	Ship->transform.position = glm::vec3(0, -3, 0.0f);
 	shipPhysics->physicsType = AABB;
 	shipPhysics->Initialize(true);
 
-	PhysicsObject* asteroidPhysics = new PhysicsObject(AsteroidOne);
+	manager.greyBallObj = new ModelLoad(DecalModel);
+	manager.redBallObj = new ModelLoad(explosionSphereModel);
+	manager.setEngine(engine);
+	manager.SpawnInRandomPos(AsteroidOne, Ship);
+
+
+	/*PhysicsObject* asteroidPhysics = new PhysicsObject(AsteroidOne);
 	asteroidPhysics->physicsType = SPHERE;
-	asteroidPhysics->Initialize(false);
+	asteroidPhysics->Initialize(false);*/
 	
-		
-	
-	
-	
-	/*speherePhysics3->DoCollisionCall([speherePhysics3](PhysicsObject* other)
-    {
-			
-			std::cout << other->model->modelName << std::endl;
-	});*/
-	
+
 	engine.AddPhysicsObjects(shipPhysics);
-	engine.AddPhysicsObjects(asteroidPhysics);
+	//engine.AddPhysicsObjects(asteroidPhysics);
 	
 	
 
@@ -440,6 +449,9 @@ int main()
 	float currentFrame = static_cast<float>(glfwGetTime());
 	lastFrame = currentFrame;
 
+	static float timer = 0.0f;
+	static int currentWave = 1;
+	static float waveInterval = 3.0f;
 	while (!glfwWindowShouldClose(window))
 	{
 		
@@ -450,8 +462,12 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+
+
+	
+
 		ProcessInput(window);
-		glClearColor(0.4f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.1, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -470,15 +486,26 @@ int main()
 			modelsLoaded[i]->DrawMeshes(defaultShader);
 
 		}
+		Ship->DrawMeshes(defaultShader);
+	//std::cout << "Ship visbile: "<<	Ship->isVisible << std::endl;
 
 		for (size_t i = 0; i < bullets.size(); i++)
 		{
 			bullets[i]->DrawMeshes(defaultShader);
 		}
 		
+
+		engine.Update(deltaTime);
 		
-		engine.UpdatePhysics(deltaTime);
-		
+		timer += deltaTime;
+
+		if (timer >= waveInterval)
+		{
+			manager.SpawnInRandomPos(AsteroidOne, Ship);
+
+			timer = 0.0f;
+		}
+		manager.ScaleFactorRedBall(deltaTime);
 		//std::cout << "sphere position : " <<speherePhysics->UpdateSphere() << " " << sphere3->transform.position.y << " " << sphere3->transform.position.z<<std::endl;
 
 
