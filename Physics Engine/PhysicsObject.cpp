@@ -223,19 +223,19 @@ void PhysicsObject::CalculateTriangle()
 
  
 
-void PhysicsObject::Initialize(bool isKinematic, bool collision)
+void PhysicsObject::Initialize(bool isKinematic, bool collision, ObjectMode mode)
 {
 	this->isKinematic = isKinematic;
 	this->collisionCallbool = collision;
-
-	if (this->isKinematic)
-	{
-		gravityValue = 0;
-	}
-	else
-	{
-		gravityValue = 0.1f;
-	}
+	this->mode = mode;
+	//if (this->isKinematic)
+	//{
+	//	gravityValue = 0;
+	//}
+	//else
+	//{
+	//	gravityValue = 0.1f;
+	//}
 	
 	
 		aabb = CalculateModelAABB();

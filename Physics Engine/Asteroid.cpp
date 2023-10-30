@@ -12,7 +12,7 @@ Asteroid::Asteroid(ModelLoad* copyModel)
 
 	phys = new PhysicsObject(model);
 	phys->physicsType = SPHERE;
-	phys->Initialize(true,true);
+	phys->Initialize(true,true,DYNAMIC);
 	phys->bounciness = 0;
 
 	phys->DoCollisionCall([this](PhysicsObject* other) 
@@ -27,7 +27,7 @@ Asteroid::Asteroid(ModelLoad* copyModel)
 				redball->explodeModel->transform.position = engine->collisionPoints[0];
 				redball->isSpawned = true;
 				redball->isCollidedWithShip = false;
-				
+			//	engine->RemovePhysicsObject(phys);
 			}
 			if (other->model->modelName == "SHIP")
 			{
@@ -41,8 +41,11 @@ Asteroid::Asteroid(ModelLoad* copyModel)
 				redball->explodeModel->transform.position = engine->collisionPoints[0];
 				redball->isSpawned = true;
 				redball->isCollidedWithShip = true;
-
+			//	engine->RemovePhysicsObject(phys);
+			
 			}
+
+			phys->mode = STATIC;
 		});
 
 
@@ -60,7 +63,7 @@ PhysicsObject* Asteroid::getPhysicsObject()
 
 void Asteroid::RemoveAsteroid()
 {
-	engine->RemovePhysicsObject(phys);
+	engine->RemovePhysicsObject(phys);	
 	redball->removeRedBall();
 	modelsLoaded.erase(std::remove(modelsLoaded.begin(), modelsLoaded.end(), model), modelsLoaded.end());
 

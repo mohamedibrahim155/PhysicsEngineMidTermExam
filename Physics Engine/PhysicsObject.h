@@ -12,7 +12,11 @@ enum PhysicsType
 };
 
 
-
+enum ObjectMode
+{
+	STATIC,
+	DYNAMIC
+};
 
 
 class PhysicsObject
@@ -24,6 +28,7 @@ public:
 
 	ModelLoad* model;
 	PhysicsType physicsType;
+	ObjectMode mode =STATIC;
 	glm::vec3 position = glm::vec3(0.0f);
 	bool isKinematic;
 	bool collisionCallbool;
@@ -39,7 +44,7 @@ public:
 	glm::vec3 velocity = glm::vec3(0);
 	glm::vec3 acceleration;
 	float gravityValue;
-	void Initialize(bool isKinematic, bool collision = false);
+	void Initialize(bool isKinematic, bool collision = false,ObjectMode mode = ObjectMode::STATIC);
 	cAABB aabb;
 	cSphere sphereShape;
 

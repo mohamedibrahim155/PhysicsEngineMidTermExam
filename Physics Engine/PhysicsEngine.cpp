@@ -58,6 +58,10 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
 
     for (size_t i = 0; i < physicsObjects.size(); i++)
     {
+        if (physicsObjects[i]->mode ==ObjectMode::STATIC)
+        {
+            continue;
+        }
         collisionPoints.clear();
         std::vector<glm::vec3> normals;
 

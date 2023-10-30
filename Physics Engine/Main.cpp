@@ -46,7 +46,7 @@ bool firstMouse = true;
 
 bool switchCamera = false;
 bool switchToPointLight = false;
-
+bool isSpacePressed = false;
 glm::vec3 currentLight(1.0f, 0.0f, 1.0f);
 glm::vec3 spotlightPos(1.0f, 0.0f, 1.0f);
 glm::vec3 PointLightPos(-1.0f, 0.0f, 1.0f);
@@ -272,6 +272,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	}
 
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		isSpacePressed = !isSpacePressed;
+	}
+
 }
 void Shoot(GLFWwindow* window, glm::vec3& pos, ModelLoad* instanceMesh, ShaderClass& shader);
 
@@ -426,7 +431,7 @@ int main()
 	PhysicsObject* shipPhysics = new PhysicsObject(Ship);
 	Ship->transform.position = glm::vec3(0, -3, 0.0f);
 	shipPhysics->physicsType = AABB;
-	shipPhysics->Initialize(true);
+	shipPhysics->Initialize(true,true,STATIC);
 
 	manager.greyBallObj = new ModelLoad(DecalModel);
 	manager.redBallObj = new ModelLoad(explosionSphereModel);
@@ -494,6 +499,10 @@ int main()
 			bullets[i]->DrawMeshes(defaultShader);
 		}
 		
+		if (lastFrame==0)
+		{
+			continue;
+		}
 
 		engine.Update(deltaTime);
 		
@@ -506,6 +515,17 @@ int main()
 			timer = 0.0f;
 		}
 		manager.ScaleFactorRedBall(deltaTime);
+		if (isSpacePressed)
+		{
+
+			for (size_t i = 0; i < manager.asteroidModels.size(); i++)
+			{
+				glm::vec3 currentDir = manager.asteroidModels[i].get()->model->transform.position;
+				glm::vec3 nomralizeDir = glm::normalize(currentDir);
+				manager.asteroidModels[i].get()->phys->velocity = nomralizeDir*20.0f;
+			}
+			isSpacePressed = false;
+		}
 		//std::cout << "sphere position : " <<speherePhysics->UpdateSphere() << " " << sphere3->transform.position.y << " " << sphere3->transform.position.z<<std::endl;
 
 

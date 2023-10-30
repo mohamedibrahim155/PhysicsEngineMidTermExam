@@ -28,7 +28,7 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 		glm::vec3 direction = glm::normalize(Ship->transform.position - asteroidCopy->model->transform.position);
 		direction +=  glm::vec3(randomOffsetX, randomOffsetY, randomOffsetZ);
 		asteroidCopy->DistanceFromShip = Ship->transform.position;
-		asteroidCopy->phys->velocity = direction *50.0f;
+		asteroidCopy->phys->velocity = direction *20.0f;
 		asteroidCopy->setPhysicsEngine(physEngine);
 		asteroidCopy->redball = new RedBall(redBallObj);
 		asteroidCopy->redball->greyBallDecal = new GreyBall(greyBallObj);
