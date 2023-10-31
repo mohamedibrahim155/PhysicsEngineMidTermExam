@@ -105,10 +105,7 @@ void AsteroidManager::ChangeAstroidsDirections(float deltaTime)
 	
 }
 
-void AsteroidManager::SetCollisionCallBackForAsteroids()
-{
 
-}
 
 void AsteroidManager::setEngine(PhysicsEngine& engine)
 {

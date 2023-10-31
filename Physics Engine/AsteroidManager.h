@@ -14,7 +14,6 @@ public:
 	
 	void SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship);
 	void ChangeAstroidsDirections(float deltaTime);
-	void SetCollisionCallBackForAsteroids();
 	int randomNumberGen(int min, int max);
 	PhysicsEngine* physEngine;
 	ModelLoad* redBallObj;

@@ -36,7 +36,7 @@
 #pragma region Variables Declaration
 const int WIDTH_WINDOW = 1200;
 const int HEIGHT_WINDOW = 800;
-std::string Game_Title = "Model Loading";
+std::string Game_Title = "Physic Midterm";
 Camera camera(glm::vec3(32, -1.5f, 25));
 #pragma endregion
 
@@ -66,10 +66,8 @@ struct ModelInfo
 };
 std::vector<ModelInfo> models;
 std::vector<ModelLoad*> modelsLoaded;
-std::vector<ModelLoad*> modelsLoadedFromFile;
-std::vector<ModelLoad*> bullets;
 
-ModelLoad* tempBullet;
+
 
 
 unsigned int loadTexture(char const* path);
