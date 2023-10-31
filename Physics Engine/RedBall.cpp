@@ -15,7 +15,7 @@ RedBall::RedBall(ModelLoad* copyModel)
 
 }
 
-void RedBall::MakeItbigger(float deltaTime)
+void RedBall::MakeItbigger(float deltaTime, std::vector<GreyBall* > &greyBallsList)
 {
     if (explodeModel &&isSpawned)
     {
@@ -31,6 +31,7 @@ void RedBall::MakeItbigger(float deltaTime)
 				greyBallDecal->greyModel->transform.position = explodeModel->transform.position;
 				greyBallDecal->greyModel->isVisible = true;
 				//isCollidedWithShip = false;
+				greyBallsList.push_back(greyBallDecal);
 			}
 	
 			isSpawned = false;

@@ -10,9 +10,10 @@ public:
 	AsteroidManager();
 	~AsteroidManager();
 	std::vector<std::shared_ptr<Asteroid> > asteroidModels;
+	std::vector<GreyBall* > greyBallsList;
 	
 	void SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship);
-	void ChangeAstroidsDirections();
+	void ChangeAstroidsDirections(float deltaTime);
 	void SetCollisionCallBackForAsteroids();
 	int randomNumberGen(int min, int max);
 	PhysicsEngine* physEngine;

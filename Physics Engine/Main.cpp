@@ -382,7 +382,13 @@ int main()
 		AsteroidOne->transform.scale = glm::vec3(0.0015f);
 		//modelsLoaded.push_back(AsteroidOne);
 
-
+		ModelLoad* Asteroid2 = new ModelLoad();
+		Asteroid2->diffuseTexture.LoadTexture("Models/StarTrek/Asteroids/Diffuse.jpg", DIFFUSE);
+		Asteroid2->specularTexture.LoadTexture("Models/StarTrek/Asteroids/Specular.jpg", SPECULAR);
+		Asteroid2->LoadModel("Models/StarTrek/Asteroids/AsteroidTwo.ply");
+		Asteroid2->modelName = "ASTEROID";
+		Asteroid2->transform.position = glm::vec3(2, 8, 2);
+		Asteroid2->transform.scale = glm::vec3(0.0015f);
 		
 
 	LightManager lightManager;
@@ -431,13 +437,15 @@ int main()
 
 	PhysicsObject* shipPhysics = new PhysicsObject(Ship);
 	Ship->transform.position = glm::vec3(0, -3, 0.0f);
-	shipPhysics->physicsType = TRIANGLE;
+	shipPhysics->physicsType = AABB;
 	shipPhysics->Initialize(true,false,STATIC);
 
 	manager.greyBallObj = new ModelLoad(DecalModel);
 	manager.redBallObj = new ModelLoad(explosionSphereModel);
 	manager.setEngine(engine);
-	manager.SpawnInRandomPos(AsteroidOne, Ship);
+
+	bool swithModels = true;
+	manager.SpawnInRandomPos(swithModels ? AsteroidOne : Asteroid2, Ship);
 
 
 	/*PhysicsObject* asteroidPhysics = new PhysicsObject(AsteroidOne);
@@ -500,49 +508,34 @@ int main()
 			bullets[i]->DrawMeshes(defaultShader);
 		}
 		
-		if (lastFrame==0)
-		{
-			continue;
-		}
+		//if (lastFrame==0)
+		//{
+		//	continue;
+		//}
 
 		engine.Update(deltaTime);
 		
-		timer += deltaTime;
 
+
+
+		timer += deltaTime;
 		if (timer >= waveInterval)
 		{
-			manager.SpawnInRandomPos(AsteroidOne, Ship);
-
+			swithModels != swithModels;
+			manager.SpawnInRandomPos(swithModels ? AsteroidOne : Asteroid2, Ship);
 			timer = 0.0f;
 		}
+
+
 		manager.ScaleFactorRedBall(deltaTime);
+
+
+
 		if (isSpacePressed)
 		{
-			manager.ChangeAstroidsDirections();
-			//glm::vec3 startPoint = Ship->transform.position;
-			//for (size_t i = 0; i < manager.asteroidModels.size(); i++)
-			//{
-			//	//glm::vec3 startPoint = Ship->transform.position;
-			//	glm::vec3 startPoint = manager.asteroidModels[i].get()->DistanceFromShip;
-
-			//	glm::vec3 currentDir = manager.asteroidModels[i].get()->model->transform.position;
-			//	glm::vec3 nomralizeDir = glm::normalize(currentDir);
-
-			//	int randomOffsetX = manager.randomNumberGen(-1, 1);
-			//	int randomOffsetY = manager.randomNumberGen(-1, 1);
-			//	int randomOffsetZ = manager.randomNumberGen(-1, 1);
-			//	currentDir += glm::vec3(randomOffsetX, randomOffsetY, randomOffsetZ);
-			//	glm::vec3 current = currentDir;
-			//	float dist = glm::distance(current, startPoint);
-			//	if (dist<18)
-			//	{
-			//		manager.asteroidModels[i].get()->phys->velocity = nomralizeDir * 15.0f;
-
-			//	}
-			//	
-			//}
+			manager.ChangeAstroidsDirections(deltaTime);
 		}
-		//std::cout << "sphere position : " <<speherePhysics->UpdateSphere() << " " << sphere3->transform.position.y << " " << sphere3->transform.position.z<<std::endl;
+		
 
 
 		glfwSwapBuffers(window);

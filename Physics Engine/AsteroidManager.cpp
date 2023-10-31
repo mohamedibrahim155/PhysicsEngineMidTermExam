@@ -47,7 +47,7 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 
 }
 
-void AsteroidManager::ChangeAstroidsDirections()
+void AsteroidManager::ChangeAstroidsDirections(float deltaTime)
 {
 	for (size_t i = 0; i < asteroidModels.size(); i++)
 	{
@@ -70,6 +70,41 @@ void AsteroidManager::ChangeAstroidsDirections()
 		}
 
 	}
+
+
+	if (greyBallsList.size() > 0)
+	{
+		
+		for (size_t i = 0; i < greyBallsList.size(); i++)
+		{
+			glm::vec3 startPos = greyBallsList[i]->greyModel->transform.position;
+			glm::vec3 nomralizeDir = glm::normalize(startPos);
+			greyBallsList[i]->greyModel->transform.position += nomralizeDir * deltaTime * 20.0f;
+			glm::vec3 current = greyBallsList[0]->greyModel->transform.position;
+
+		
+		}
+
+
+		for (size_t i = 0; i < greyBallsList.size(); i++)
+		{
+
+			glm::vec3 current = greyBallsList[i]->greyModel->transform.position;
+			float dis = glm::distance(glm::vec3(0), current);
+			if (dis > 80)
+			{
+				
+				greyBallsList.erase(greyBallsList.begin() + i);
+
+			}
+
+		}
+	
+
+		std::cout << "Greyballs list : " << greyBallsList.size() << std::endl;
+		
+	}
+	
 }
 
 void AsteroidManager::SetCollisionCallBackForAsteroids()
@@ -93,7 +128,7 @@ void AsteroidManager::ScaleFactorRedBall(float deltaTime)
 			{
 				if (asteroidModels[i]->redball->isSpawned)
 				{
-					asteroidModels[i]->redball->MakeItbigger(deltaTime);
+					asteroidModels[i]->redball->MakeItbigger(deltaTime,greyBallsList);
 
 				}
 			}
@@ -113,9 +148,8 @@ void AsteroidManager::ScaleFactorRedBall(float deltaTime)
 
 
 
-//	std::cout << "ModelLoaded list : " << asteroidModels.size() << std::endl;
 
-	//std::cout << "aestroid list : " << asteroidModels.size() << std::endl;
+
 
 }
 int AsteroidManager::randomNumberGen(int min, int max)

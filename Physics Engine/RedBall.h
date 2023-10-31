@@ -7,7 +7,7 @@ class RedBall
 public:
 	RedBall();
 	RedBall(ModelLoad* copyModel);
-	void MakeItbigger(float deltaTime);
+	void MakeItbigger(float deltaTime, std::vector<GreyBall* > &greyBallsList);
 	~RedBall();
 	ModelLoad* explodeModel;
 	GreyBall* greyBallDecal;

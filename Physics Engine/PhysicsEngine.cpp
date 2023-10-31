@@ -16,7 +16,7 @@ PhysicsEngine::~PhysicsEngine()
 void PhysicsEngine::AddPhysicsObjects(PhysicsObject* objs)
 {
 
-    std::cout << " physics object size = " << physicsObjects.size() << std::endl;
+ 
 	physicsObjects.push_back(objs);
 
 }
@@ -26,7 +26,7 @@ void PhysicsEngine::RemovePhysicsObject(PhysicsObject* removeElement)
     std::vector<PhysicsObject*>::iterator it = std::find(physicsObjects.begin(), physicsObjects.end(), removeElement);
     if (it != physicsObjects.end())
     {
-        std::cout << "removed phys :://////   " << physicsObjects.size() <<std::endl;
+      
         physicsObjects.erase(it);
     }
     else
@@ -83,6 +83,7 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
             }
             else
             {
+
 
                 if (physicsObjects[i]->checkCollision(physicsObjects[j], collisionPoints, normals))
                 {
