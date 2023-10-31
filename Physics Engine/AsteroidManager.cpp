@@ -11,6 +11,7 @@ AsteroidManager::~AsteroidManager()
 
 void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 {
+	// Spawning astroid in a random value of -30,30
 	int asteroidcount = 20;
 	for (size_t i = 0; i < asteroidcount; i++)
 	{
@@ -41,7 +42,7 @@ void AsteroidManager::SpawnInRandomPos(ModelLoad* AsteroidOne, ModelLoad* Ship)
 		asteroidCopy->redball->greyBallDecal = new GreyBall(greyBallObj);
 
 		asteroidModels.push_back(asteroidCopy);
-		physEngine->AddPhysicsObjects(asteroidCopy->getPhysicsObject());
+		physEngine->AddPhysicsObjects(asteroidCopy->getPhysicsObject());  // adding physics to asteroid
 
 	}
 
@@ -100,9 +101,6 @@ void AsteroidManager::ChangeAstroidsDirections(float deltaTime)
 
 		}
 	
-
-		std::cout << "Greyballs list : " << greyBallsList.size() << std::endl;
-		
 	}
 	
 }

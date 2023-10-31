@@ -30,6 +30,9 @@
 #include"RedBall.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+
+
 #pragma region Variables Declaration
 const int WIDTH_WINDOW = 1200;
 const int HEIGHT_WINDOW = 800;
@@ -47,7 +50,8 @@ bool firstMouse = true;
 bool switchCamera = false;
 bool switchToPointLight = false;
 bool isSpacePressed = false;
-bool isSheildActivated = false;
+bool changeCollisionType = false;
+
 glm::vec3 currentLight(1.0f, 0.0f, 1.0f);
 glm::vec3 spotlightPos(1.0f, 0.0f, 1.0f);
 glm::vec3 PointLightPos(-1.0f, 0.0f, 1.0f);
@@ -66,7 +70,7 @@ std::vector<ModelLoad*> modelsLoadedFromFile;
 std::vector<ModelLoad*> bullets;
 
 ModelLoad* tempBullet;
-void Instantiate(ModelLoad* model);
+
 
 unsigned int loadTexture(char const* path);
 void MoveModels(ModelInfo& model, glm::vec3 position);
@@ -185,39 +189,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_V && action == GLFW_PRESS)
-	{
-		switchCamera = !switchCamera;
-		std::cout << "Value of swtich camera : " << switchCamera << std::endl;
-	}
-	if (key == GLFW_KEY_P && action == GLFW_PRESS)
-	{
-
-		switchToPointLight = !switchToPointLight;
-		std::cout << "Value of swtich pointLight : " << switchToPointLight << std::endl;
-		if (switchToPointLight)
-		{
-			currentLight = PointLightPos;
-		}
-		else
-		{
-			currentLight = spotlightPos;
-
-		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-	{
-		Instantiate(tempBullet);
 
 
 
-	}
-
-	if (key == GLFW_KEY_O && action == GLFW_PRESS)
-	{
-		WriteModelData("Save.txt");
-
-	}
 	if (key == GLFW_KEY_I && action == GLFW_PRESS)
 	{
 		// modelsLoadedFromFile = ReadModelData("Save.txt");
@@ -277,6 +251,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	{
 		isSpacePressed = !isSpacePressed;
 	}
+	if (key == GLFW_KEY_K && action == GLFW_PRESS)
+	{
+		changeCollisionType != changeCollisionType;
+	}
 
 }
 void Shoot(GLFWwindow* window, glm::vec3& pos, ModelLoad* instanceMesh, ShaderClass& shader);
@@ -286,13 +264,6 @@ std::vector<MeshData> meshTemp;
 
 int main()
 {
-
-
-
-	
-
-
-	
 
 	if (!glfwInit())
 	{
@@ -335,7 +306,7 @@ int main()
 
 
 
-
+	//DirectionLight model
 	ModelLoad* lightModel= new ModelLoad();
 	lightModel->diffuseTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Diffuse.png", DIFFUSE);
 	lightModel->specularTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Specular.png", SPECULAR);
@@ -343,24 +314,24 @@ int main()
 	lightModel->transform.scale = glm::vec3(1);
 	lightModel->modelName = "Player";
 	lightModel->transform.scale = glm::vec3(0.3f);
-	//modelsLoaded.push_back(lightModel);
+	
 
 
 
 	
-
+	//Red ball Model
 	ModelLoad* explosionSphereModel = new ModelLoad();
 	explosionSphereModel->diffuseTexture.LoadTexture("Models/SpecSphere/redColor.png", DIFFUSE);
 	explosionSphereModel->specularTexture.LoadTexture("Models/SpecSphere/redColor.png", SPECULAR);
 	explosionSphereModel->LoadModel("Models/DefaultSphere/Sphere_1_unit_Radius.ply");
-
+	//Grey ball model
 	ModelLoad* DecalModel = new ModelLoad();
 	DecalModel->diffuseTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Diffuse.png", DIFFUSE);
 	DecalModel->specularTexture.LoadTexture("Models/SpecSphere/Sphere 1_Sphere__Specular.png", SPECULAR);
 	DecalModel->LoadModel("Models/DefaultSphere/Sphere_1_unit_Radius.ply");
 
 	
-
+	//Space Ship model
 	ModelLoad* Ship = new ModelLoad();
 	Ship->diffuseTexture.LoadTexture("Models/StarTrek/Diffuse.png", DIFFUSE);
 	Ship->specularTexture.LoadTexture("Models/StarTrek/Specualar.png", SPECULAR);
@@ -368,11 +339,11 @@ int main()
 	Ship->modelName = "SHIP";
 	//plane->transform.position.y = -1;
 	Ship->transform.scale =glm::vec3(0.001f);
-	//modelsLoaded.push_back(Ship);
 
 
 
-	
+
+		//Asteroid type 1 model
 		ModelLoad* AsteroidOne = new ModelLoad();
 		AsteroidOne->diffuseTexture.LoadTexture("Models/StarTrek/Asteroids/Diffuse.jpg", DIFFUSE);
 		AsteroidOne->specularTexture.LoadTexture("Models/StarTrek/Asteroids/Specular.jpg", SPECULAR);
@@ -380,8 +351,8 @@ int main()
 		AsteroidOne->modelName = "ASTEROID";
 		AsteroidOne->transform.position = glm::vec3(2,8,2);
 		AsteroidOne->transform.scale = glm::vec3(0.0015f);
-		//modelsLoaded.push_back(AsteroidOne);
 
+		//Asteroid type 2 model
 		ModelLoad* Asteroid2 = new ModelLoad();
 		Asteroid2->diffuseTexture.LoadTexture("Models/StarTrek/Asteroids/Diffuse.jpg", DIFFUSE);
 		Asteroid2->specularTexture.LoadTexture("Models/StarTrek/Asteroids/Specular.jpg", SPECULAR);
@@ -402,43 +373,18 @@ int main()
 	lightManager.AddNewLight(directionLight);
 	lightManager.SetUniforms(defaultShader.ID);
 
+	//Phyics engine which handles collision
 	PhysicsEngine engine;
 
+	//Astroid manager, which handles spawning astroids and its factors
 	AsteroidManager manager;
-	//for (size_t i = 0; i < 5; i++)
-	//{
-	//	//ModelLoad* Asteroidcopy = new ModelLoad(AsteroidOne);
-	//	//Asteroidcopy->transform.position = glm::vec3(i * 1, 10, i * 3);
-	//	//Asteroidcopy->transform.scale = glm::vec3(0.0015f);
-	//	//modelsLoaded.push_back(Asteroidcopy);
 
-	//	//PhysicsObject* asteroidPhysics = new PhysicsObject(Asteroidcopy);
-	//	//asteroidPhysics->physicsType = SPHERE;
-	//	//asteroidPhysics->Initialize(false,true);
-
-	//	//asteroidPhysics->DoCollisionCall([asteroidPhysics](PhysicsObject* other) {
-	//	//	std::cout << "Other name: " << other->model->modelName << std::endl;
-	//	//	});
-
-	//	//engine.AddPhysicsObjects(asteroidPhysics);
-
-
-
-	//	Asteroid* nw = new Asteroid(AsteroidOne);
-	//	nw->model->transform.position = glm::vec3(i * 1, 10, 0);
-	//	glm::vec3 direction = glm::normalize(Ship->transform.position - nw->model->transform.position);
-	//	nw->phys->velocity = direction;
-	//	manager.asteroidLists.push_back(nw);
-	//	engine.AddPhysicsObjects(nw->getPhysicsObject());
-
-	//}
-	
-
-
+	//Added physics to Space ship
 	PhysicsObject* shipPhysics = new PhysicsObject(Ship);
 	Ship->transform.position = glm::vec3(0, -3, 0.0f);
-	shipPhysics->physicsType = AABB;
+	shipPhysics->physicsType = changeCollisionType ? TRIANGLE : AABB; // if "K" pressed, the spaceship collsion type changes
 	shipPhysics->Initialize(true,false,STATIC);
+
 
 	manager.greyBallObj = new ModelLoad(DecalModel);
 	manager.redBallObj = new ModelLoad(explosionSphereModel);
@@ -446,26 +392,15 @@ int main()
 
 	bool swithModels = true;
 	manager.SpawnInRandomPos(swithModels ? AsteroidOne : Asteroid2, Ship);
-
-
-	/*PhysicsObject* asteroidPhysics = new PhysicsObject(AsteroidOne);
-	asteroidPhysics->physicsType = SPHERE;
-	asteroidPhysics->Initialize(false);*/
-	
-
 	engine.AddPhysicsObjects(shipPhysics);
-	//engine.AddPhysicsObjects(asteroidPhysics);
-	
-	
-
 	
 
 	float currentFrame = static_cast<float>(glfwGetTime());
 	lastFrame = currentFrame;
 
-	static float timer = 0.0f;
-	static int currentWave = 1;
-	static float waveInterval = 3.0f;
+	float timer = 0.0f;
+	int currentWave = 1;
+	float waveInterval = 3.0f;
 	while (!glfwWindowShouldClose(window))
 	{
 		
@@ -481,7 +416,7 @@ int main()
 	
 
 		ProcessInput(window);
-		glClearColor(0.1, 0.1f, 0.1f, 1.0f);
+		glClearColor(0, 0, 0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -501,19 +436,9 @@ int main()
 
 		}
 		Ship->DrawMeshes(defaultShader);
-	//std::cout << "Ship visbile: "<<	Ship->isVisible << std::endl;
 
-		for (size_t i = 0; i < bullets.size(); i++)
-		{
-			bullets[i]->DrawMeshes(defaultShader);
-		}
-		
-		//if (lastFrame==0)
-		//{
-		//	continue;
-		//}
 
-		engine.Update(deltaTime);
+		engine.Update(deltaTime); //Physics update
 		
 
 
@@ -522,17 +447,18 @@ int main()
 		if (timer >= waveInterval)
 		{
 			swithModels != swithModels;
-			manager.SpawnInRandomPos(swithModels ? AsteroidOne : Asteroid2, Ship);
+			manager.SpawnInRandomPos(swithModels ? AsteroidOne : Asteroid2, Ship);  //Spawning astroids randomly
 			timer = 0.0f;
 		}
 
 
-		manager.ScaleFactorRedBall(deltaTime);
+		manager.ScaleFactorRedBall(deltaTime); // scaling the collided Astroids as red color ball
 
 
 
 		if (isSpacePressed)
 		{
+			// if space press, deflecting the astroids in a range within a radius as sheild also deflecting grey particles
 			manager.ChangeAstroidsDirections(deltaTime);
 		}
 		
@@ -543,50 +469,9 @@ int main()
 
 	}
 
-
-
-	
-
 	modelsLoaded.clear();
 	glfwTerminate();
 	return 0;
 
 }
-int posCount = 0;
-void Instantiate(ModelLoad* model)
-{
-	
-	/*posCount++;
-	ModelLoad* temp = new ModelLoad();
-	temp->modelName = model->modelName;
-	temp->transform.position = glm::vec3(posCount * -2.0f, 3.0, 2.0f);
-	temp->ListofMeshesInthisModel = std::vector<MeshData>(model->ListofMeshesInthisModel.begin(), model->ListofMeshesInthisModel.end());
-	bullets.push_back(temp);
-	PhysicsObject bullet(temp);
-	bullet.physicsType = SPHERE;
-	bullet.Initialize(true);*/
-	
 
-
-}
-
-
-void MakeAsteroids()
-{
-
-}
-
-void Shoot(GLFWwindow* window, glm::vec3& pos, ModelLoad* instanceMesh, ShaderClass& shader)
-{
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-	{
-		pos = glm::vec3(0.0f);
-		instanceMesh->DrawMeshes(shader);
-
-		
-		
-	}
-	
-
-
-}

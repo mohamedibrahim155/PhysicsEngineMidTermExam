@@ -19,7 +19,6 @@ public:
 	PhysicsEngine* physEngine;
 	ModelLoad* redBallObj;
 	ModelLoad* greyBallObj;
-	//RedBall* redSpawnBall;
 	void setEngine(PhysicsEngine& engine);
 	void ScaleFactorRedBall(float deltaTime);
 private:

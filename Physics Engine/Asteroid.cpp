@@ -19,7 +19,7 @@ Asteroid::Asteroid(ModelLoad* copyModel)
 		{
 			if (other->model->modelName =="ASTEROID")
 			{
-				std::cout << "Other name: " << other->model->modelName << std::endl;
+				// using model name as tag to check collision with asteroid
 				phys->collisionCallbool = false;
 				phys->collisionCallback = nullptr;
 				redball->explodeModel->isVisible = true;
@@ -27,21 +27,17 @@ Asteroid::Asteroid(ModelLoad* copyModel)
 				redball->explodeModel->transform.position = engine->collisionPoints[0];
 				redball->isSpawned = true;
 				redball->isCollidedWithShip = false;
-			//	engine->RemovePhysicsObject(phys);
 			}
 			if (other->model->modelName == "SHIP")
 			{
-				std::cout << "Other name: " << other->model->modelName << std::endl;
+				// using model name as tag to check collision with spaceShip
 				phys->collisionCallbool = false;
 				phys->collisionCallback = nullptr;
-				std::cout << "x : " << engine->collisionPoints[0].x << "y : " << engine->collisionPoints[0].y << "z : " << engine->collisionPoints[0].z << std::endl;
-				//engine->RemovePhysicsObject(phys);
 				redball->explodeModel->isVisible = true;
 				model->isVisible = false;
 				redball->explodeModel->transform.position = engine->collisionPoints[0];
 				redball->isSpawned = true;
 				redball->isCollidedWithShip = true;
-			//	engine->RemovePhysicsObject(phys);
 			
 			}
 

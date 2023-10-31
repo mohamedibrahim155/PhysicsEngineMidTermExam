@@ -34,7 +34,7 @@ void PhysicsEngine::RemovePhysicsObject(PhysicsObject* removeElement)
         std::cout << "Physics object not found in the vector." << std::endl;
     }
 
-   // physicsObjects.erase(std::remove(physicsObjects.begin(), physicsObjects.end(), removeElement), physicsObjects.end());
+  
 }
 
 void PhysicsEngine::Update(float deltaTime)
